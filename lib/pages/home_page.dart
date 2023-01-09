@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:modern_smart_home_ui_tut_by_mitch_koko/util/smart_device_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +21,13 @@ class _HomePageState extends State<HomePage> {
     ['Smart TV', 'lib/icons/smart-tv.png', false],
     ['Smart Fan', 'lib/icons/fan.png', false],
   ];
+
+  void powerSwitchChanged(bool value, int index) {
+    setState(() {
+      mySmartDevices[index][2] = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,35 +66,60 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
-              children: const [
-                Text('Welcome Home, '),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Welcome Home,'),
                 Text(
                   'Dev Rabie ',
-                  style: TextStyle(fontSize: 40),
+                  style: GoogleFonts.bebasNeue(
+                    fontSize: 72,
+                  ),
                 ),
               ],
             ),
           ),
 
           const SizedBox(
-            height: 20,
+            height: 25,
           ),
 
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Divider(
+              color: Colors.grey[400],
+              thickness: 1,
+            ),
+          ),
+
+          const SizedBox(
+            height: 25,
+          ),
           // Smart devices + grid:
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: const Text('Smart devices '),
+            child: Text(
+              'Smart devices ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Colors.grey[800],
+              ),
+            ),
           ),
           Expanded(
               child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: mySmartDevices.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
+                    childAspectRatio: 1 / 1.1,
                   ),
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(color: Colors.lightGreenAccent),
+                    return SmartDeviceBox(
+                      smartDeviceName: mySmartDevices[index][0],
+                      iconPath: mySmartDevices[index][1],
+                      powerOn: mySmartDevices[index][2],
+                      onChanged: (value) => powerSwitchChanged(value, index),
                     );
                   }))
         ]),
